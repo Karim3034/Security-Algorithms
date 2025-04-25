@@ -12,6 +12,7 @@ public class MonoalphabeticCipherTest {
         String key = "QWERTYUIOPASDFGHJKLZXCVBNM";
         String plaintext = "HELLO WORLD";
         String expectedCiphertext = "ITSSG VGKSR";
+
         String actualCiphertext = MonoalphabeticCipher.encrypt(plaintext, key);
         assertEquals(expectedCiphertext, actualCiphertext);
     }
