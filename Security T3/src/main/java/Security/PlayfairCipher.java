@@ -56,6 +56,14 @@ public class PlayfairCipher {
     // TODO: Implement this method to find the position of a character in the key matrix
     private int[] findPosition(char c) {
         // Students should complete this part
+        for(int i=0;i<keyMatrix.length;i++){
+            
+            for(int j=0;j<keyMatrix[i].length;j++){
+                if(keyMatrix[i][j]==c){
+                    return new int[]{i,j};
+                }
+            }
+        }
         return null;
     }
 
@@ -87,6 +95,37 @@ public class PlayfairCipher {
     // TODO: Implement this method to decrypt the ciphertext back to plaintext
     public String decrypt(String text) {
         // Students should complete this part
-        return null;
+        text = prepareText(text);
+        StringBuilder encryptedText = new StringBuilder();
+
+        for (int i = 0; i < text.length(); i += 2) {
+            int[] pos1 = findPosition(text.charAt(i));
+            int[] pos2 = findPosition(text.charAt(i + 1));
+
+               if (pos1[0] == pos2[0]) {  // Same row
+                encryptedText.append(keyMatrix[pos1[0]][(pos1[1] + 4) % 5]);
+                encryptedText.append(keyMatrix[pos2[0]][(pos2[1] + 4) % 5]);
+            } else if (pos1[1] == pos2[1]) {  // Same column
+                encryptedText.append(keyMatrix[(pos1[0] + 4) % 5][pos1[1]]);
+                encryptedText.append(keyMatrix[(pos2[0] + 4) % 5][pos2[1]]);
+            } else {  // Rectangle swap
+                encryptedText.append(keyMatrix[pos1[0]][pos2[1]]);
+                encryptedText.append(keyMatrix[pos2[0]][pos1[1]]);
+            }
+        }
+        StringBuilder filteredText = new StringBuilder();
+        filteredText.append(encryptedText.charAt(0));
+
+        for (int i = 1; i < encryptedText.length() - 1; i++) {
+            if (!(encryptedText.charAt(i) == 'X' && encryptedText.charAt(i - 1) == encryptedText.charAt(i + 1) && i % 2 != 0)) {
+                filteredText.append(encryptedText.charAt(i));
+            }
+        }
+        if (!(encryptedText.charAt(encryptedText.length() - 1) == 'X')) {
+            filteredText.append(encryptedText.charAt(encryptedText.length() - 1));
+        }
+        
+        return filteredText.toString();
+        
     }
 }
